@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: opd_db
+    environment:
+      POSTGRES_USER: opd_user
+      POSTGRES_PASSWORD: opd_password
+      POSTGRES_DB: opd_claim
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U opd_user -d opd_claim"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    container_name: opd_api
+    command: flask run --host=0.0.0.0 --port=8000
+    environment:
+      FLASK_ENV: development
+      FLASK_APP: wsgi.py
+      DATABASE_URL: postgresql://opd_user:opd_password@db:5432/opd_claim
+      API_KEY: local-dev
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./apps/api:/app
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - opd_network
+
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    container_name: opd_web
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./apps/web:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      - api
+    networks:
+      - opd_network
+
+volumes:
+  postgres_data:
+
+networks:
+  opd_network:
+    driver: bridge

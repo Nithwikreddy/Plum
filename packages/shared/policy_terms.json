@@ -1,0 +1,72 @@
+{
+  "policy_name": "Plum OPD Advantage",
+  "policy_version": "1.0",
+  "limits": {
+    "annual_limit": 50000,
+    "per_claim_limit": 5000
+  },
+  "coverage": {
+    "consultation": {
+      "covered": true,
+      "sub_limit": 2000,
+      "copay_percentage": 10,
+      "network_discount_percentage": 20
+    },
+    "diagnostics": {
+      "covered": true,
+      "sub_limit": 10000,
+      "copay_percentage": 0,
+      "network_discount_percentage": 20,
+      "pre_auth_required_threshold": 10000,
+      "requires_pre_auth_list": ["MRI", "CT"]
+    },
+    "pharmacy": {
+      "covered": true,
+      "sub_limit": 15000,
+      "copay_percentage": 30,
+      "mandatory_generic": true,
+      "network_discount_percentage": 20
+    },
+    "dental": {
+      "covered": true,
+      "sub_limit": 10000,
+      "copay_percentage": 0,
+      "network_discount_percentage": 20,
+      "excludes": ["cosmetic_whitening", "cosmetic_procedures"]
+    },
+    "alternative_medicine": {
+      "covered": true,
+      "sub_limit": 8000,
+      "types": ["Ayurveda", "Homeopathy", "Unani"],
+      "therapy_session_limit": 20,
+      "copay_percentage": 10,
+      "network_discount_percentage": 20
+    }
+  },
+  "waiting_periods": {
+    "initial_waiting_days": 30,
+    "specific_ailments": {
+      "diabetes": 90,
+      "hypertension": 90,
+      "ped": 365
+    }
+  },
+  "exclusions": [
+    "cosmetic_procedures",
+    "weight_loss_treatments",
+    "bariatric_surgery",
+    "diet_plans",
+    "weight_management"
+  ],
+  "claim_requirements": {
+    "prescription_required": true,
+    "original_bills_required": true,
+    "patient_details_match_required": true,
+    "doctor_registration_format": "^[A-Z]{2}/\\d{5}/\\d{4}$",
+    "submission_window_days": 30
+  },
+  "cashless": {
+    "available_for_network_only": true,
+    "instant_approval_limit": 5000
+  }
+}

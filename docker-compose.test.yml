@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  api-test:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile.test
+    image: opd_api_test:latest
+    container_name: opd_api_test
+    volumes:
+      - ./:/app:cached
+    working_dir: /app
+    environment:
+      - PYTHONUNBUFFERED=1
